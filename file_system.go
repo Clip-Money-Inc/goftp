@@ -125,21 +125,34 @@ func commandNotSupporterdError(err error) bool {
 // be used. You may have to set ServerLocation in your config to get (more)
 // accurate ModTimes in this case.
 func (c *Client) ReadDir(path string) ([]os.FileInfo, error) {
-	entries, err := c.dataStringList("MLSD %s", path)
-
-	parser := parseMLST
-
-	if err != nil {
-		if !commandNotSupporterdError(err) {
-			return nil, err
-		}
-
+	var entries []string
+	var parser func(string, bool) (os.FileInfo, error)
+	var err error
+	if c.config.DisableMLSD {
 		entries, err = c.dataStringList("LIST %s", path)
 		if err != nil {
 			return nil, err
 		}
 		parser = func(entry string, skipSelfParent bool) (os.FileInfo, error) {
 			return parseLIST(entry, c.config.ServerLocation, skipSelfParent)
+		}
+	} else {
+		entries, err = c.dataStringList("MLSD %s", path)
+
+		parser = parseMLST
+
+		if err != nil {
+			if !commandNotSupporterdError(err) {
+				return nil, err
+			}
+
+			entries, err = c.dataStringList("LIST %s", path)
+			if err != nil {
+				return nil, err
+			}
+			parser = func(entry string, skipSelfParent bool) (os.FileInfo, error) {
+				return parseLIST(entry, c.config.ServerLocation, skipSelfParent)
+			}
 		}
 	}
 

@@ -149,6 +149,10 @@ type Config struct {
 	// hung connections.
 	DisableEPSV bool
 
+	// Disables MLSD in favour of LIST. This is useful in cases where the server does
+	// not support MLSD, in order to avoid trying MLSD every time
+	DisableMLSD bool
+
 	// For testing convenience.
 	stubResponses map[string]stubResponse
 }

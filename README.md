@@ -1,3 +1,6 @@
+## Fork Notes
+This library was forked to add a configuration option to disable MLSD (`config.DisableMLSD`), so it is not attempted on every `ReadDir` command for servers that don't support it.
+
 # goftp - an FTP client for golang
 
 [![Build Status](https://travis-ci.org/secsy/goftp.svg)](https://travis-ci.org/secsy/goftp) [![GoDoc](https://godoc.org/github.com/secsy/goftp?status.svg)](https://godoc.org/github.com/secsy/goftp)
