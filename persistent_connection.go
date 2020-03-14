@@ -13,6 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type RawConn interface {
@@ -182,11 +184,7 @@ func (pconn *persistentConn) readResponse() (int, string, error) {
 }
 
 func (pconn *persistentConn) debug(f string, args ...interface{}) {
-	if pconn.config.Logger == nil {
-		return
-	}
-
-	fmt.Fprintf(pconn.config.Logger, "goftp: %.3f #%d %s\n",
+	log.Tracef("goftp: %.3f #%d %s\n",
 		time.Now().Sub(pconn.t0).Seconds(),
 		pconn.idx,
 		fmt.Sprintf(f, args...),
