@@ -16,7 +16,7 @@ import (
 // resuming a failed download as long as it continues making progress.
 // Retrieve will also verify the file's size after the transfer if the
 // server supports the SIZE command.
-func (c *Client) Retrieve(path string, dest io.Writer) error {
+func (c *Client) Retrieve(path string, dest io.Writer) ftpError {
 	// fetch file size to check against how much we transferred
 	size, err := c.size(path)
 	if err != nil {
@@ -60,7 +60,7 @@ func (c *Client) Retrieve(path string, dest io.Writer) error {
 // resume an upload if the client is connected to multiple servers. Store
 // will also verify the remote file's size after the transfer if the server
 // supports the SIZE command.
-func (c *Client) Store(path string, src io.Reader) error {
+func (c *Client) Store(path string, src io.Reader) ftpError {
 
 	canResume := len(c.hosts) == 1 && c.canResume()
 
